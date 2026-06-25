@@ -1,41 +1,16 @@
-## Example Summary
+# 演示效果
+https://www.bilibili.com/video/BV1w6421u7JX
+# 项目环境
 
-Empty project using DriverLib.
-This example shows a basic empty project using DriverLib with just main file
-and SysConfig initialization.
+本项目为基于STM32及OpenMV的云台追踪装置，在keil和OpenMV IDE上进行开发
 
-## Peripherals & Pin Assignments
+# OpenMV程序思路
 
-| Peripheral | Pin | Function |
-| --- | --- | --- |
-| SYSCTL |  |  |
-| DEBUGSS | PA20 | Debug Clock |
-| DEBUGSS | PA19 | Debug Data In Out |
+我使用的是OpenMV4 H7 R2板子,openmv程序见文件openmv.py，通过OpenMV对被测物体检测，使用绿色瓶盖作为被测物体，通过查找最大色块程序检测目标，并在图像上绘制目标的轮廓和质心，并将质心的坐标通过串口传给stm32
 
-## BoosterPacks, Board Resources & Jumper Settings
+# STM32F103C8T6程序思路
 
-Visit [LP_MSPM0G3507](https://www.ti.com/tool/LP-MSPM0G3507) for LaunchPad information, including user guide and hardware files.
-
-| Pin | Peripheral | Function | LaunchPad Pin | LaunchPad Settings |
-| --- | --- | --- | --- | --- |
-| PA20 | DEBUGSS | SWCLK | N/A | <ul><li>PA20 is used by SWD during debugging<br><ul><li>`J101 15:16 ON` Connect to XDS-110 SWCLK while debugging<br><li>`J101 15:16 OFF` Disconnect from XDS-110 SWCLK if using pin in application</ul></ul> |
-| PA19 | DEBUGSS | SWDIO | N/A | <ul><li>PA19 is used by SWD during debugging<br><ul><li>`J101 13:14 ON` Connect to XDS-110 SWDIO while debugging<br><li>`J101 13:14 OFF` Disconnect from XDS-110 SWDIO if using pin in application</ul></ul> |
-
-### Device Migration Recommendations
-This project was developed for a superset device included in the LP_MSPM0G3507 LaunchPad. Please
-visit the [CCS User's Guide](https://software-dl.ti.com/msp430/esd/MSPM0-SDK/latest/docs/english/tools/ccs_ide_guide/doc_guide/doc_guide-srcs/ccs_ide_guide.html#sysconfig-project-migration)
-for information about migrating to other MSPM0 devices.
-
-### Low-Power Recommendations
-TI recommends to terminate unused pins by setting the corresponding functions to
-GPIO and configure the pins to output low or input with internal
-pullup/pulldown resistor.
-
-SysConfig allows developers to easily configure unused pins by selecting **Board**→**Configure Unused Pins**.
-
-For more information about jumper configuration to achieve low-power using the
-MSPM0 LaunchPad, please visit the [LP-MSPM0G3507 User's Guide](https://www.ti.com/lit/slau873).
-
-## Example Usage
-
-Compile, load and run the example.
+根据实时接收到的质心坐标，使用PID控制器，通过控制两个舵机的角度使质心一直保持在图像中心附近
+# 注意事项
+1.将openmv的P4接到stm32的PA10，P5接到PA9，舵机接线根据自己的硬件分别将信号线接在PA0和PA1，另外舵机的限位也需要根据自己的硬件修改------------------------------------
+2.如果keil工程报错，可能是因为文件传输的问题，可以解压keil.zip文件，使用keil打开即为完整的stm32f103c8t6的工程文件------------------------------------
